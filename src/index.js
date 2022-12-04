@@ -27,13 +27,13 @@ const getUrl = name =>
 // //       console.log(error);
 // //     });
 // };
-function handleSubmit(event) {
-  // event.preventDefault();
-  const text = event.target.value;
-  fetchPicture(text);
-  console.log(text);
-  // form.reset();
-}
+// const handleSubmit = (event) => {
+//   // event.preventDefault();
+//   const text = event.target.value;
+//   fetchPicture(text);
+//   console.log(text);
+// form.reset();
+// }
 
 const fetchPicture = name => {
   const parsedName = name.trim();
@@ -46,25 +46,26 @@ const fetchPicture = name => {
     .get(url)
     .then(response => {
       console.log(parsedName);
-      console.log(response);
+      console.log(typeof response.data.hits);
+      console.log(response.data.hits);
       // const div = document.querySelector('.gallery');
-      renderImages(response);
+      return renderImages(response.data.hits);
     })
     .catch(error => {
       console.log(error);
     });
 };
 
-const renderImages = response => {
-  const img = response
+const renderImages = res => {
+  const img = res
     .map(
-      ({
-        data: {
-          hits: { webformatURL: url, tags: alt },
-        },
+      ({webformatURL, tags
+        // data: {
+        //   hits: { webformatURL: url, tags: alt },
+        // },
       }) =>
         `<div class="photo-card">
-<img src="${url}" alt="${alt}" loading="lazy" />
+<img src="${webformatURL}" alt="${tags}" loading="lazy" />
 <div class="info">
   <p class="info-item">
     <b>Likes</b>
@@ -82,8 +83,9 @@ const renderImages = response => {
 </div>`
     )
     .join('');
+
   div.insertAdjacentHTML('beforeend', img);
 };
 // btn.addEventListener('click', fetchPicture(input.value));
-// input.addEventListener('input', event => fetchPicture(event.target.value));
-input.addEventListener('submit', handleSubmit);
+input.addEventListener('input', event => fetchPicture(event.target.value));
+// input.addEventListener('submit', handleSubmit);
