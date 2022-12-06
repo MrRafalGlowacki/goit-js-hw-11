@@ -34,7 +34,7 @@ const fetchPicture = async name => {
   if (parsedName.length === 0) return;
   const url = getUrl(parsedName);
   try {
-    const response = await axios.get(url);
+    const response = await axios(url);
 // const response = await pict.json()
     // .then(response => {
     // console.log(parsedName);
