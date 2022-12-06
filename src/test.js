@@ -1,7 +1,7 @@
 import Notiflix from 'notiflix';
 import axios from 'axios';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 const axios = require('axios');
 const form = document.querySelector('#search-form');
 const input = document.querySelector('input');
@@ -24,6 +24,8 @@ const createImageLoader = () => {
     // console.log(`Loaded images from page ${page - 1}`),
     (loader.style.visibility = 'visible')
   );
+
+  
 };
 
 // const loadImages = createImageLoader();
@@ -55,7 +57,7 @@ const fetchPicture = name => {
 };
 const lightbox = new SimpleLightbox(`.gallery a`, {
   disableRightClick: true,
-  captionsData: 'alt',
+  captionsData: "alt",
   captionDelay: 250,
 });
 const renderImages = res => {
@@ -92,6 +94,7 @@ const renderImages = res => {
     .join('');
 
   div.insertAdjacentHTML('beforeend', img);
+  loader.textContent = 'Loading...';
 };
 
 const observer = new IntersectionObserver(([entry]) => {
@@ -104,10 +107,3 @@ form.addEventListener('submit', e => {
   fetchPicture(input.value);
 });
 observer.observe(loader);
-// input.addEventListener('submit', event => handleSubmit(event.target.value));
-// input.addEventListener('submit', handleSubmit, e => console.log(e));
-// form.addEventListener('submit', e => {
-//   e.preventDefault();
-//   const data = new FormData(e.target);
-//   console.log([...data.entries()]);
-// });
