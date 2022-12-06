@@ -38,15 +38,15 @@ const fetchPicture = async name => {
 // const response = await pict.json()
     // .then(response => {
     // console.log(parsedName);
-
+return console.log(response)
     // console.log(response);
-    if (response.data.hits.length === 0) {
-      throw Notiflix.Notify.info(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    }
-    totalHits = response.data.totalHits;
-    return renderImages(response.data.hits);
+    // if (response.data.hits.length === 0) {
+    //   throw Notiflix.Notify.info(
+    //     'Sorry, there are no images matching your search query. Please try again.'
+    //   );
+    // }
+    // totalHits = response.data.totalHits;
+    // return renderImages(response.data.hits);
     // console.log(totalHits),
     // Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
   } catch (error) {
