@@ -83,8 +83,7 @@ const fetchPicture = name => {
   const parsedName = name.trim();
   if (parsedName.length === 0) return;
   const url = getUrl(parsedName);
-  return axios
-    .get(url)
+  return axios(url)
     .then(response => {
       // console.log(parsedName);
 
@@ -144,7 +143,7 @@ const renderImages = res => {
     .join('');
 
   div.insertAdjacentHTML('beforeend', img);
-  loader.textContent = 'Loading...';
+  
 };
 
 const observer = new IntersectionObserver(([entry]) => {
