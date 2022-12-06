@@ -32,7 +32,7 @@ const fetchPicture = name => {
   const parsedName = name.trim();
   if (parsedName.length === 0) return;
   const url = getUrl(parsedName);
-  return axios(url)
+  axios(url)
     .then(response => {
       // console.log(parsedName);
 
@@ -71,7 +71,7 @@ const renderImages = res => {
         downloads,
       }) =>
         `<div class="photo-card">
-        <a cclass="gallery__item" href=${largeImageURL}>
+        <a class="gallery__item" href=${largeImageURL}>
 <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
 <div class="info">
   <p class="info-item">
@@ -98,16 +98,10 @@ const observer = new IntersectionObserver(([entry]) => {
   if (!entry.isIntersecting) return;
   createImageLoader();
 });
-// btn.addEventListener('click', fetchPicture(input.value));
+
 form.addEventListener('submit', e => {
   e.preventDefault();
   fetchPicture(input.value);
 });
 observer.observe(loader);
-// input.addEventListener('submit', event => handleSubmit(event.target.value));
-// input.addEventListener('submit', handleSubmit, e => console.log(e));
-// form.addEventListener('submit', e => {
-//   e.preventDefault();
-//   const data = new FormData(e.target);
-//   console.log([...data.entries()]);
-// });
+
