@@ -32,7 +32,7 @@ const fetchPicture = name => {
   const parsedName = name.trim();
   if (parsedName.length === 0) return;
   const url = getUrl(parsedName);
-  return axios(url)
+  return axios.get(url)
     .then(response => {
       // console.log(parsedName);
 
