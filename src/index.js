@@ -11,6 +11,7 @@ const loader = document.querySelector('#load-more');
 loader.style.visibility = 'hidden';
 const safeSearch = true;
 const theKey = '31673863-7b4e2329a784886b2ded53b03&';
+let totalHits = 0;
 let page = 1;
 let amount = 40;
 // console.log(input);
@@ -28,30 +29,29 @@ const createImageLoader = () => {
 
 // const loadImages = createImageLoader();
 
-const fetchPicture = name => {
+const fetchPicture = async name => {
   const parsedName = name.trim();
   if (parsedName.length === 0) return;
   const url = getUrl(parsedName);
-  axios(url)
-    .then(response => {
-      // console.log(parsedName);
+  try {
+    const response = await axios.get(url);
+// const response = await pict.json()
+    // .then(response => {
+    // console.log(parsedName);
 
-      console.log(response);
-      if (response.data.hits.length === 0) {
-        throw Notiflix.Notify.info(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      }
-      const totalHits = response.data.totalHits;
-      return (
-        renderImages(response.data.hits),
-        // console.log(totalHits),
-        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
+    // console.log(response);
+    if (response.data.hits.length === 0) {
+      throw Notiflix.Notify.info(
+        'Sorry, there are no images matching your search query. Please try again.'
       );
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    }
+    totalHits = response.data.totalHits;
+    return renderImages(response.data.hits);
+    // console.log(totalHits),
+    // Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
+  } catch (error) {
+    console.error(error);
+  }
 };
 const lightbox = new SimpleLightbox(`.gallery a`, {
   disableRightClick: true,
@@ -99,9 +99,9 @@ const observer = new IntersectionObserver(([entry]) => {
   createImageLoader();
 });
 
-form.addEventListener('submit', e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
-  fetchPicture(input.value);
+  await fetchPicture(input.value);
+  if (totalHits===0) return; Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 });
 observer.observe(loader);
-
