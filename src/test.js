@@ -21,7 +21,7 @@ const fetchPicture = async (name) => {
   
   const url = getUrl(name)
   try {
-    const response = await axios(url);
+    const response = await axio(url);
     //   const users = await response.json();
     console.log(response);
   } catch (error) {
