@@ -9,8 +9,13 @@ const form = document.querySelector('#search-form');
 const btnMore = document.querySelector('.load-more');
 const btnLoop = document.querySelector('.loop-btn');
 let page = 1;
+let amount = 40;
+const getUrl = search =>
+`https://pixabay.com/api/?key=${THEKEY}&q=${search}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`;
 
-const fetchPhotos = async (name, page) => {
+const fetchPicture = async (name) => {
+  
+  const url = getUrl(name)
   try {
     const respone = await axios(
       `https://pixabay.com/api/?key=${THEKEY}&q=${name}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${page}`
