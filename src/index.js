@@ -15,8 +15,8 @@ let totalHits = 0;
 let page = 1;
 let amount = 40;
 // console.log(input);
-// const getUrl = search =>
-//   `https://pixabay.com/api/?key=${theKey}&q=${search}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`;
+const getUrl = search =>
+  `https://pixabay.com/api/?key=${theKey}&q=${search}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`;
 
 const createImageLoader = () => {
   return (
@@ -32,9 +32,9 @@ const createImageLoader = () => {
 const fetchPicture = async name => {
   const parsedName = name.trim();
   if (parsedName.length === 0) return;
-  // const url = getUrl(parsedName);
+  const url = getUrl(parsedName);
   try {
-    const response = await axios(`https://pixabay.com/api/?key=${theKey}&q=${parsedName}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`);
+    const response = await axios(url);
 // const response = await pict.json()
     // .then(response => {
     // console.log(parsedName);
