@@ -10,13 +10,13 @@ const div = document.querySelector('.gallery');
 const loader = document.querySelector('#load-more');
 loader.style.visibility = 'hidden';
 const safeSearch = true;
-const theKey = '31673863-7b4e2329a784886b2ded53b03&';
+const THEKEY = '31673863-7b4e2329a784886b2ded53b03&';
 let totalHits = 0;
 let page = 1;
 let amount = 40;
 // console.log(input);
 const getUrl = search =>
-  `https://pixabay.com/api/?key=${theKey}&q=${search}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`;
+  `https://pixabay.com/api/?key=${THEKEY}&q=${search}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`;
 
 const createImageLoader = () => {
   return (
@@ -44,14 +44,14 @@ const fetchPicture = async name => {
 // return 
 console.log(data)
     // console.log(response);
-    // if (response.data.hits.length === 0) {
-    //   throw Notiflix.Notify.info(
-    //     'Sorry, there are no images matching your search query. Please try again.'
-    //   );
-    // }
-    // totalHits = response.data.totalHits;
-    // return renderImages(response.data.hits);
-    // console.log(totalHits),
+    if (data.hits.length === 0) {
+      throw Notiflix.Notify.info(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    }
+    totalHits = data.totalHits;
+    return renderImages(data.hits),
+    console.log(totalHits);
     // Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
   } catch (error) {
     console.error(error);
