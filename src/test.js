@@ -2,7 +2,7 @@ import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 const THEKEY = '31673863-7b4e2329a784886b2ded53b03&';
-
+const axios = require('axios');
 const gallery = document.querySelector('.gallery');
 const form = document.querySelector('#search-form');
 const btnMore = document.querySelector('.load-more');
