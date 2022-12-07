@@ -15,13 +15,13 @@ let totalHits = 0;
 let page = 1;
 let amount = 40;
 const getUrl = search =>
-`https://pixabay.com/api/?key=${THEKEY}&q=${search}&type=photo&orientation=horizontal&safesearch=${safeSearch}&per_page=${amount}&page=${page}`;
+`https://jsonplaceholder.typicode.com/posts`;
 
 const fetchPicture = async (name) => {
   
   const url = getUrl(name)
   try {
-    const response = await axio(url);
+    const response = await axios(url);
     //   const users = await response.json();
     console.log(response);
   } catch (error) {
