@@ -34,11 +34,15 @@ const fetchPicture = async name => {
   if (parsedName.length === 0) return;
   const url = getUrl(parsedName);
   try {
-    const response = await axios(url);
+    const {data} = await axios({
+      method: "get",
+      url: url
+    });
 // const response = await pict.json()
     // .then(response => {
     // console.log(parsedName);
-return console.log(response)
+// return 
+console.log(data)
     // console.log(response);
     // if (response.data.hits.length === 0) {
     //   throw Notiflix.Notify.info(
