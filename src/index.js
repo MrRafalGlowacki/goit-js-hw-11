@@ -10,6 +10,7 @@ const loader = document.querySelector('#load-more');
 const topBtn = document.querySelector('#topBtn');
 const safeSearch = true;
 const THEKEY = '31673863-7b4e2329a784886b2ded53b03&';
+let scroller = 70;
 let totalHits = 0;
 let page = 1;
 let amount = 40;
@@ -43,16 +44,12 @@ const getUrl = search =>
 // pagination creator
 const createImageLoader = () => {
   if (!gallery.firstElementChild) return;
-  totalPages = Math.ceil(totalHits / amount);
-  console.log({gallery})
-  const { clientHeight: cardHeight } = document
+  const { height: cardHeight } = document
     .querySelector('.gallery')
-    .firstElementChild;
-    console.log(cardHeight)
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
-    });
+    .firstElementChild.getBoundingClientRect();
+  scroller = cardHeight;
+  totalPages = Math.ceil(totalHits / amount);
+  console.log(scroller);
   if (page < totalPages) return (page += 1), fetchPictures(input.value);
   else
     throw Notiflix.Notify.info(
@@ -79,15 +76,7 @@ const fetchPictures = async name => {
   }
 };
 // gallery render
-// if (gallery.firstElementChild) {
-//   const { clientHeight: cardHeight } = document
-//     .querySelector('.gallery')
-//     .firstElementChild.getBoundingClientRect();
-// }
-// window.scrollBy({
-//   top: cardHeight * 2,
-//   behavior: 'smooth',
-// });
+
 const renderImages = async res => {
   const img = await res
     .map(
@@ -100,42 +89,58 @@ const renderImages = async res => {
         comments,
         downloads,
       }) =>
-        `<div class="photo-card">
-        <a href="${largeImageURL}">
-          <img class="gallery__image" src="${webformatURL}" alt="${tags}"
-          loading="lazy" />
-        </a>
+        `<article class="photo-card">
+        <div>
+          <a href="${largeImageURL}">
+            <img
+              class="gallery__image"
+              src="${webformatURL}"
+              alt="${tags}"
+              loading="lazy"
+            />
+          </a>
+        </div>
         <section class="info">
-          <div><p class="info-item"><b>Likes</b></p><p>${likes}</p></div>
-          <div><p class="info-item"><b>Views</b></p><p>${views}</p></div>
-          <div><p class="info-item"><b>Comments</b></p><p>${comments}</p></div>
-          <div><p class="info-item"><b>Downloads</b></p><p>${downloads}</p></div>
+          <div>
+            <p class="info-item"><b>Likes</b></p>
+            <p>${likes}</p>
+          </div>
+          <div>
+            <p class="info-item"><b>Views</b></p>
+            <p>${views}</p>
+          </div>
+          <div>
+            <p class="info-item"><b>Comments</b></p>
+            <p>${comments}</p>
+          </div>
+          <div>
+            <p class="info-item"><b>Downloads</b></p>
+            <p>${downloads}</p>
+          </div>
         </section>
-      </div>`
+      </article>
+      `
     )
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', img);
-
-  // const { clientHeight: cardHeight } = document
-  //   .querySelector('.gallery')
-  //   .firstElementChild.getBoundingClientRect();
-
-  // pageScroll = cardHeight;
-  // console.log(typeof pageScroll);
-
   lightbox.refresh();
+  window.scrollBy({
+    top: scroller * 2,
+    behavior: 'smooth',
+  });
 };
 // first search
 const searchHandler = async () => {
   gallery.innerHTML = '';
   page = 1;
   totalHits = 0;
+  scroller = 70;
   await fetchPictures(input.value);
   if (totalHits === 0) return;
   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 };
-// observer
+// observer creator
 const observer = new IntersectionObserver(([entry]) => {
   if (!entry.isIntersecting) return;
   createImageLoader();
@@ -149,6 +154,7 @@ form.addEventListener('submit', async e => {
 observer.observe(loader);
 
 topBtn.addEventListener('click', topFunction);
+console.log(scroller);
 
 window.onscroll = function () {
   scrollFunction();
