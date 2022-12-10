@@ -44,13 +44,16 @@ const getUrl = search =>
 const createImageLoader = () => {
   if (!gallery.firstElementChild) return;
   totalPages = Math.ceil(totalHits / amount);
-  console.log({ page, totalPages });
-  if (page < totalPages)
-    return (
-      (page += 1),
-      fetchPictures(input.value),
-      console.log({ page, totalPages, totalHits })
-    );
+  console.log({gallery})
+  const { clientHeight: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild;
+    console.log(cardHeight)
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
+  if (page < totalPages) return (page += 1), fetchPictures(input.value);
   else
     throw Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
@@ -76,8 +79,17 @@ const fetchPictures = async name => {
   }
 };
 // gallery render
-const renderImages = res => {
-  const img = res
+// if (gallery.firstElementChild) {
+//   const { clientHeight: cardHeight } = document
+//     .querySelector('.gallery')
+//     .firstElementChild.getBoundingClientRect();
+// }
+// window.scrollBy({
+//   top: cardHeight * 2,
+//   behavior: 'smooth',
+// });
+const renderImages = async res => {
+  const img = await res
     .map(
       ({
         webformatURL,
@@ -88,7 +100,7 @@ const renderImages = res => {
         comments,
         downloads,
       }) =>
-    `<div class="photo-card">
+        `<div class="photo-card">
         <a href="${largeImageURL}">
           <img class="gallery__image" src="${webformatURL}" alt="${tags}"
           loading="lazy" />
@@ -105,16 +117,13 @@ const renderImages = res => {
 
   gallery.insertAdjacentHTML('beforeend', img);
 
-  // if (gallery.firstElementChild) {
-  //   const { clientHeight: cardHeight } = document
-  //     .querySelector('.gallery')
-  //     .firstElementChild.getBoundingClientRect();
-  // }
+  // const { clientHeight: cardHeight } = document
+  //   .querySelector('.gallery')
+  //   .firstElementChild.getBoundingClientRect();
 
-  window.scrollBy({
-    top: 140,
-    behavior: 'smooth',
-  });
+  // pageScroll = cardHeight;
+  // console.log(typeof pageScroll);
+
   lightbox.refresh();
 };
 // first search
