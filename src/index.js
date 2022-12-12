@@ -7,14 +7,73 @@ const form = document.querySelector('#search-form');
 const input = document.querySelector('input');
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('#load-more');
+const loadBtn = document.querySelector('.loader__button');
 const topBtn = document.querySelector('#topBtn');
 const safeSearch = true;
 const THEKEY = '31673863-7b4e2329a784886b2ded53b03&';
-let scroller = 70;
+let infinityScrol = false;
+let scroller = 0;
 let totalHits = 0;
 let page = 1;
 let amount = 40;
 let totalPages = 1;
+
+// ask for premium
+Notiflix.Confirm.show(
+  'Try premium picture loader!',
+  'For a short period of time it is free, do you want to test it?',
+  'Yes, bring it on!',
+  'No, I want to my Mommy',
+  // if YES
+  function okCb() {
+    infinityScrol === true;
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      searchHandler();
+    });
+    // observer creator
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      createImageLoader();
+    });
+    observer.observe(loader);
+  },
+  // if NO
+  function cancelCb() {
+    Notiflix.Notify.info('As You wish, but You could try it for free', {
+      position: 'center-top',
+    });
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      await searchHandler();
+    });
+    window.addEventListener('scroll', function (e) {
+      if (
+        window.innerHeight + window.scrollY >= document.body.scrollHeight &&
+        page < totalPages &&
+        infinityScrol === false &&
+        gallery.firstElementChild
+      ) {
+        loadBtn.style.display = 'block';
+      } else if (
+        window.innerHeight + window.scrollY >= document.body.scrollHeight &&
+        page === totalPages
+      ) {
+        Notiflix.Notify.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
+    });
+    loadBtn.addEventListener('click', () => {
+      if (page < totalPages)
+        createImageLoader(), (loadBtn.style.display = 'none');
+    });
+  },
+  {
+    width: '420px',
+    borderRadius: '8px',
+  }
+);
 
 // return to page top
 const scrollFunction = () => {
@@ -48,8 +107,7 @@ const createImageLoader = () => {
     .querySelector('.gallery')
     .firstElementChild.getBoundingClientRect();
   scroller = cardHeight;
-  totalPages = Math.ceil(totalHits / amount);
-  console.log(scroller);
+
   if (page < totalPages) return (page += 1), fetchPictures(input.value);
   else
     throw Notiflix.Notify.info(
@@ -75,8 +133,8 @@ const fetchPictures = async name => {
     console.error(error);
   }
 };
-// gallery render
 
+// gallery render
 const renderImages = async res => {
   const img = await res
     .map(
@@ -124,38 +182,32 @@ const renderImages = async res => {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', img);
-  lightbox.refresh();
+  await lightbox.refresh();
+  scrollPage();
+};
+const scrollPage = () => {
   window.scrollBy({
-    top: scroller * 2,
+    top: scroller * 3,
     behavior: 'smooth',
   });
 };
-// first search
+
+// first search heandler
 const searchHandler = async () => {
   gallery.innerHTML = '';
   page = 1;
   totalHits = 0;
-  scroller = 70;
+  scroller = 46;
   await fetchPictures(input.value);
+  totalPages = Math.ceil(totalHits / amount);
+
   if (totalHits === 0) return;
   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 };
-// observer creator
-const observer = new IntersectionObserver(([entry]) => {
-  if (!entry.isIntersecting) return;
-  createImageLoader();
-});
-// listners
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  searchHandler();
-});
-
-observer.observe(loader);
 
 topBtn.addEventListener('click', topFunction);
-console.log(scroller);
 
 window.onscroll = function () {
   scrollFunction();
 };
+
